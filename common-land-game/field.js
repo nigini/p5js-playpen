@@ -58,6 +58,6 @@ class Field {
 				}
 			}
 		}
-		return toWithdraw;
+		return amount-toWithdraw;
 	}
 }
