@@ -60,4 +60,30 @@ class Field {
 		}
 		return amount-toWithdraw;
 	}
+
+	withdrawResource(x,y) {
+		let fieldPosition = this.getFieldPosition(x,y);
+		console.log('Field position: ' + JSON.stringify(fieldPosition));
+		if(fieldPosition) {
+			let localResource = this.resources[fieldPosition[0]][fieldPosition[1]];
+			if(localResource > 0) {
+				this.resources[fieldPosition[0]][fieldPosition[1]]--;
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
+
+	getFieldPosition(x,y) {
+		let line = Math.floor((x-this.topX)/this.cellSize);
+		let column = Math.floor((y-this.topY)/this.cellSize);
+
+		if (line < this.resources.length & line >=0) {
+			if (column < this.resources[0].length & column >=0) {
+				return [line,column];
+			}
+		}
+		return null;
+	}
 }

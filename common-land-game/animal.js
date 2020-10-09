@@ -1,19 +1,27 @@
-class Animal {
+class Animal extends Clickable{
 
-	pallete = ['Green','Orange','Red','Black'];
+	palette = ['Green','Orange','Red','Grey','Black','White'];
 
 	/**
 	 * @topProduction non-negative integer defining health limit for production
 	 * @goodHealthLimit limit of health value, as animals cannot grow healthier infinitely
 	 * @healthStart how healthy the animal is borned
 	 */
-	constructor(topProduction, goodHealthLimit, healthStart, drawDiameter) {
+	constructor(topProduction, goodHealthLimit, healthStart, animalDiameter) {
+		super(0,0);
+		this.width = animalDiameter;
+		this.height = animalDiameter;
+		this.cornerRadius = animalDiameter/2;
+		this.text = '';
+		this.stroke = this.palette[0];
+		this.color = this.palette[0];
+
 		this.topProduction = topProduction;
 		this.goodHealthLimit = goodHealthLimit;
 		this.currentHealth = healthStart;
 		this.healthHistory = [healthStart];
 		this.productionHistory = [];
-		this.drawDiameter = drawDiameter;
+		this.selected = false;
 	}
 
 	/**
@@ -61,20 +69,56 @@ class Animal {
 		return this.currentHealth==0;
 	}
 
-	draw(posX, posY) {
-		noStroke();
+	update() {
+		let newColor;
 		if (this.isDead()) {
-			fill(color(this.pallete[3]));
+			newColor = color(this.palette[3]);
 		} else {
 			if(this.currentHealth >= this.topProduction){
-				fill(color(this.pallete[0]));
+				newColor = color(this.palette[0]);
 			} else {
-				fill(color(this.pallete[1]));
+				newColor = color(this.palette[1]);
 			}
 		}
 		if (this.currentHealth <= 2) {
-			fill(color(this.pallete[2]));
+			newColor = color(this.palette[2]);
 		}
-		circle(posX, posY, this.drawDiameter);
+
+		if(this.selected) {
+			this.stroke = color(this.palette[4]);
+		} else {
+			this.stroke = newColor;
+		}
+		this.color = newColor;
+		this.draw();
+	}
+
+	move(posX, posY) {
+		//console.log('ANIMAL MOVED: (' + posX + ',' + posY + ')');
+		this.cleanFromScreen();
+		this.x = posX;
+		this.y = posY;
+	}
+
+	getPositionX() {
+		return this.x;
+	}
+
+	getPositionY() {
+		return this.y;
+	}
+
+	select(){
+		this.selected = true;
+	}
+
+	deselect(){
+		this.selected = false;
+	}
+
+	cleanFromScreen() {
+		this.color = color(this.palette[5]);
+		this.stroke = color(this.palette[5]);
+		this.draw();
 	}
 }

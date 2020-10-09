@@ -1,49 +1,70 @@
 let field;
-let days = 1;
+let days = 0;
+let dayDuration = 5*1000; //Five seconds
 let animals = [];
 let animalDiameter = 20;
 let animalsX, animalsY;
+let selectedAnimal;
 
 function setup() {
-	frameRate(1);
+	frameRate(30);
 	createCanvas(600, 400);
 	animalsX = 100;
 	animalsY = 300;
 	field = new Field(animalsX, 10, 4, 4, 50);
-	while (animals.length <=3) {
-		animals.push(new Animal(4,5,5,animalDiameter));
+	for(let animal=0; animal < 4; animal++) {
+		animals.push(new Animal(4,5,5, animalDiameter));
+		animals[animal].onPress = function () {
+			console.log('CLICKED: ' + animal);
+			this.select();
+			selectedAnimal = this;
+		}
+		animals[animal].move((animalsX+10)+((animalDiameter+10)*animal), animalsY);
 	}
 }
 
 function draw() {
 	field.draw();
 	for(let animal = 0; animal < animals.length; animal++) {
-		animals[animal].draw((animalsX+10)+((animalDiameter+10)*animal), animalsY);
+		animals[animal].update();
 	}
-	feedAnimals();
-	//noLoop();
+	let currentDay = floor(millis()/dayDuration);
+	if(currentDay > days) {
+		console.log('Day: ' + ++days);
+		console.log('SELECTED: ' + selectedAnimal);
+		feedAnimals();
+	}
 }
 
 function feedAnimals() {
-	let withdrawn = field.withdrawResources(animals.length);
-	if(withdrawn == 0) {
-		console.log('DISASTER! You have consumed all the resources! =(');
-	}
 	let production = [];
-	let areAnimalsDead = false;
+	let areAnimalsDead = true;
 	for (animal of animals) {
-		if(withdrawn > 0){
-			production.push(animal.eat(1));
-			withdrawn--;
-		} else {
-			production.push(animal.eat(0));
+		let animalProduction = 0;
+		let consumedResource = 0;
+		if(!animal.isDead()){
+			consumedResource = field.withdrawResource(animal.getPositionX(),animal.getPositionY());
+			animalProduction = animal.eat(consumedResource);
 		}
-		areAnimalsDead = areAnimalsDead | animal.isDead();
+		production.push(animalProduction);
+		areAnimalsDead = areAnimalsDead && animal.isDead();
 	}
-	console.log('Day: ' + days++);
-	console.log('Production: ' + JSON.stringify(production));
+	console.log('Production: ' + production);
 	if (areAnimalsDead) {
 		noLoop();
-		console.log('POOR ANIMALS! :(')
+		console.log('SORRY! Your animals are dead! :(')
+	}
+}
+
+function mouseDragged() {
+	if(selectedAnimal) {
+		selectedAnimal.move(mouseX, mouseY);
+	}
+}
+
+function mouseReleased() {
+	if(selectedAnimal) {
+		selectedAnimal.deselect();
+		selectedAnimal = null;
 	}
 }
