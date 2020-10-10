@@ -1,14 +1,23 @@
 let field;
-let days = 0;
+let currentDay = 0;
 let dayDuration = 5*1000; //Five seconds
-let animals = [];
 let animalDiameter = 20;
 let animalsX, animalsY;
 let selectedAnimal;
 
+let animals = []; //ToDo: Should be moved to game_data
+let lastRoundProduction = []; //ToDo: Should be moved to game_data
+let game_data = {
+	days: [],
+	production: [],
+	health: [],
+	field_capacity: [],
+};
+
 function setup() {
 	frameRate(30);
-	createCanvas(600, 400);
+	let game = createCanvas(400, 400);
+	game.parent('my_game');
 	animalsX = 100;
 	animalsY = 300;
 	field = new Field(animalsX, 10, 4, 4, 50);
@@ -21,6 +30,9 @@ function setup() {
 		}
 		animals[animal].move((animalsX+10)+((animalDiameter+10)*animal), animalsY);
 	}
+	viz_setup(['health','production','field_capacity']);
+	updateGameData();
+	viz_update(game_data);
 }
 
 function draw() {
@@ -28,18 +40,22 @@ function draw() {
 	for(let animal = 0; animal < animals.length; animal++) {
 		animals[animal].update();
 	}
-	let currentDay = floor(millis()/dayDuration);
-	if(currentDay > days) {
-		console.log('Day: ' + ++days);
-		console.log('SELECTED: ' + selectedAnimal);
+	let dayFromTime = Math.floor(millis()/dayDuration);
+	if(dayFromTime > currentDay) {
+		console.log('Day: ' + ++currentDay);
 		feedAnimals();
+		updateGameData();
+		viz_update(game_data);
+		console.log('Field: ' + game_data.field_capacity[currentDay] +
+					' - Health: ' + game_data.health[currentDay] +
+					' - Production: ' + game_data.production[currentDay]);
 	}
 }
 
 function feedAnimals() {
 	let production = [];
 	let areAnimalsDead = true;
-	for (animal of animals) {
+	for (let animal of animals) {
 		let animalProduction = 0;
 		let consumedResource = 0;
 		if(!animal.isDead()){
@@ -49,9 +65,10 @@ function feedAnimals() {
 		production.push(animalProduction);
 		areAnimalsDead = areAnimalsDead && animal.isDead();
 	}
-	console.log('Production: ' + production);
+	lastRoundProduction = production;
 	if (areAnimalsDead) {
 		noLoop();
+		draw();
 		console.log('SORRY! Your animals are dead! :(')
 	}
 }
@@ -67,4 +84,21 @@ function mouseReleased() {
 		selectedAnimal.deselect();
 		selectedAnimal = null;
 	}
+}
+
+function updateGameData() {
+	game_data.days.push(currentDay);
+	game_data.field_capacity.push(field.getCurrentCapacity());
+	let health = 0;
+	for (let animal of animals) {
+		health += animal.getHealth();
+	}
+	game_data.health.push(health);
+	let production = 0;
+	if(currentDay > 0)
+		production = game_data.production[currentDay-1];
+	for (let prod of lastRoundProduction) {
+		production += prod;
+	}
+	game_data.production.push(production);
 }

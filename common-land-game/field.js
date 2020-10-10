@@ -10,6 +10,7 @@ class Field {
 		this.resources = this.createMatrix(sizeX, sizeY, this.cellCapacity);
 		this.topX = positionX;
 		this.topY = positionY;
+		this.fieldCapacity = sizeX * sizeY * this.cellCapacity;
 	}
 
 	createMatrix(numLines, numColumns, initValue) {
@@ -40,27 +41,6 @@ class Field {
 		rect(this.topX, this.topY, (this.resources.length*this.cellSize), (this.resources[0].length*this.cellSize));
 	}
 
-	withdrawResources(amount) {
-		console.log('Field status: ' + JSON.stringify(this.resources));
-		let toWithdraw = amount;
-		let localResource = 0;
-		for(let lines=0; lines < this.resources.length && toWithdraw > 0; lines++){
-			for(let columns=0; columns < this.resources[0].length && toWithdraw > 0; columns++){
-				localResource = this.resources[lines][columns];
-				if(localResource > 0) {
-					if(localResource >= toWithdraw) {
-						this.resources[lines][columns] -= toWithdraw;
-						toWithdraw = 0;
-					} else {
-						toWithdraw -= localResource;
-						this.resources[lines][columns] = 0;
-					}
-				}
-			}
-		}
-		return amount-toWithdraw;
-	}
-
 	withdrawResource(x,y) {
 		let fieldPosition = this.getFieldPosition(x,y);
 		console.log('Field position: ' + JSON.stringify(fieldPosition));
@@ -68,6 +48,7 @@ class Field {
 			let localResource = this.resources[fieldPosition[0]][fieldPosition[1]];
 			if(localResource > 0) {
 				this.resources[fieldPosition[0]][fieldPosition[1]]--;
+				this.fieldCapacity--;
 				return 1;
 			} else {
 				return 0;
@@ -85,5 +66,9 @@ class Field {
 			}
 		}
 		return null;
+	}
+
+	getCurrentCapacity(){
+		return this.fieldCapacity;
 	}
 }

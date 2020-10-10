@@ -69,10 +69,14 @@ class Animal extends Clickable{
 		return this.currentHealth==0;
 	}
 
+	getHealth() {
+		return this.currentHealth;
+	}
+
 	update() {
 		let newColor;
-		if (this.isDead()) {
-			newColor = color(this.palette[3]);
+		if (this.currentHealth <= 2) {
+			newColor = color(this.palette[2]);
 		} else {
 			if(this.currentHealth >= this.topProduction){
 				newColor = color(this.palette[0]);
@@ -80,8 +84,8 @@ class Animal extends Clickable{
 				newColor = color(this.palette[1]);
 			}
 		}
-		if (this.currentHealth <= 2) {
-			newColor = color(this.palette[2]);
+		if (this.isDead()) {
+			newColor = color(this.palette[3]);
 		}
 
 		if(this.selected) {
