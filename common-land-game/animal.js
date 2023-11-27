@@ -54,9 +54,9 @@ class Animal extends Clickable{
 		if(!this.isDead()){
 			let currentProduction = 0;
 			if(this.currentHealth > this.topProduction){
-				currentProduction = 2;
-			} else if (this.currentHealth == this.topProduction) {
 				currentProduction = 1;
+			} else if (this.currentHealth == this.topProduction) {
+				currentProduction = 0.5;
 			}
 			this.productionHistory.push(currentProduction);
 			return currentProduction;			

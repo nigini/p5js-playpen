@@ -24,11 +24,18 @@ function setup() {
 	field = new Field(animalsX, 10, 4, 4, 50);
 	for(let animal=0; animal < 4; animal++) {
 		animals.push(new Animal(4,5,5, animalDiameter));
+		animals[animal].move((animalsX+10)+((animalDiameter+10)*animal), animalsY);
+
 		animals[animal].onPress = function () {
 			this.select();
 			selectedAnimal = this;
+			console.log("UHU!?")
 		}
-		animals[animal].move((animalsX+10)+((animalDiameter+10)*animal), animalsY);
+		animals[animal].onRelease = function () {
+			this.deselect();
+			selectedAnimal = null;
+			console.log("MOOOO!")
+		}
 	}
 	viz_setup(['health','production','field_capacity']);
 	updateGameData();
@@ -73,19 +80,13 @@ function feedAnimals() {
 	if (areAnimalsDead) {
 		finished = true;
 		console.log('SORRY! Your animals are dead! :(')
+		document.getElementById("message").style.display = "block"
 	}
 }
 
 function mouseDragged() {
 	if(selectedAnimal) {
 		selectedAnimal.move(mouseX, mouseY);
-	}
-}
-
-function mouseReleased() {
-	if(selectedAnimal) {
-		selectedAnimal.deselect();
-		selectedAnimal = null;
 	}
 }
 
