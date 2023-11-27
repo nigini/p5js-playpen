@@ -48,7 +48,7 @@ function viz_setup(groups) {
 
 function viz_update(gameData) {
     let data = transformGameData(gameData);
-    console.log("DATA: " + JSON.stringify(data));
+    // console.log("DATA: " + JSON.stringify(data));
 
     let linesPath = svg.selectAll(".myLines");
     linesPath.remove();

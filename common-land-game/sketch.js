@@ -4,6 +4,7 @@ let dayDuration = 5*1000; //Five seconds
 let animalDiameter = 20;
 let animalsX, animalsY;
 let selectedAnimal;
+let finished = false;
 
 let animals = []; //ToDo: Should be moved to game_data
 let lastRoundProduction = []; //ToDo: Should be moved to game_data
@@ -24,7 +25,6 @@ function setup() {
 	for(let animal=0; animal < 4; animal++) {
 		animals.push(new Animal(4,5,5, animalDiameter));
 		animals[animal].onPress = function () {
-			console.log('CLICKED: ' + animal);
 			this.select();
 			selectedAnimal = this;
 		}
@@ -44,11 +44,15 @@ function draw() {
 	if(dayFromTime > currentDay) {
 		console.log('Day: ' + ++currentDay);
 		feedAnimals();
+		field.regenerateField();
 		updateGameData();
 		viz_update(game_data);
 		console.log('Field: ' + game_data.field_capacity[currentDay] +
 					' - Health: ' + game_data.health[currentDay] +
 					' - Production: ' + game_data.production[currentDay]);
+	}
+	if (finished) {
+		noLoop()
 	}
 }
 
@@ -67,8 +71,7 @@ function feedAnimals() {
 	}
 	lastRoundProduction = production;
 	if (areAnimalsDead) {
-		noLoop();
-		draw();
+		finished = true;
 		console.log('SORRY! Your animals are dead! :(')
 	}
 }
