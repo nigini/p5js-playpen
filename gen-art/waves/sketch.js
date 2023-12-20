@@ -11,16 +11,17 @@ function setup() {
         color('#592A71'),
         color('#3E1255')
     ];
-    wave_number = 100;
+    wave_number = 10;
     wave_count = 0;
 
-    waves = setupWaveByDiameter();
-    //waves = setupWaveByColor(height/4, height/2, true);
+    //waves = setupWaveByDiameter();
+    waves = setupWaveByColor(height/4, height/2, true);
 }
 
 function draw() {
     //draw_scattered();
-    draw_flowers();
+    //draw_flowers();
+    draw_strips();
 }
 
 function draw_flowers() {
