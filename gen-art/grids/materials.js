@@ -43,7 +43,7 @@ class Bar {
         this.stroke = stroke;
     }
 
-    draw(x, y) {
+    draw(x, y, rotate_angle=0) {
         push()
         rectMode(CENTER);
         if (!this.fill) {
@@ -57,7 +57,9 @@ class Bar {
             stroke(this.stroke);
         }
         translate(x,y);
+        rotate(rotate_angle)
         rect(0, 0, this.length, this.width);
         pop()
     }
+
 }
