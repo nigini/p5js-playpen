@@ -6,8 +6,8 @@ function setup() {
 
     //CONFIG
     COLORS = new MyColors()
-    BAR_DIM = new BarDimensions()
-    NUM_ELEMENTS = 20
+    BAR_DIM = new BarDimensions(BarDimensions.long_thin)
+    NUM_ELEMENTS = 50
     MIN_ELEMENT_DIM = width/20
     MAX_ELEMENT_DIM = width
 
@@ -16,7 +16,7 @@ function setup() {
 function draw() {
     angleMode(DEGREES);
     for(let element=0; element<NUM_ELEMENTS; element++) {
-        let dim = BAR_DIM.randomDimension(random([width, height]))
+        let dim = BAR_DIM.getDimension(random([width, height]))
         let rot_angle = random([0, 90])
         print(dim)
         let bar = new Bar(

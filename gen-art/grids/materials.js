@@ -15,17 +15,16 @@ class MyColors {
 
 
 class BarDimensions {
-    constructor(){
-        this.dimensions = [
-            this.long_thin
-        ]
+    constructor(dim_method){
+        this.dimensions = dim_method;
     }
 
-    randomDimension(seed){
-        return random(this.dimensions)(seed)
+    getDimension(seed){
+        return this.dimensions(seed);
     }
 
-    long_thin(seed) {
+
+    static long_thin(seed) {
         return {
             length:seed,
             width:seed/100
