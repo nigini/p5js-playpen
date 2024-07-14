@@ -1,6 +1,6 @@
 # Grids log
 
-My goal is to generate abstract art based on a grid-like set of "brush strokes".
+My goal is to generate abstract art based on a lines/bars like in a set of "brush strokes".
 
 
 ## STEP ONE:
