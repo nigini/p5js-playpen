@@ -1,10 +1,12 @@
 class MyColors {
     constructor(){
+        // https://coolors.co/313715-d16014-939f5c-bbce8a-e2f9b8
         this.colorPalette = [
-            color('#E0AA24'),
-            color('#E02466'),
-            color('#23E032'),
-            color('#2457E0')
+            color('#313715'),
+            color('#D16014'),
+            color('#939F5C'),
+            color('#BBCE8A'),
+            color('#E2F9B8')
         ];
     }
 
@@ -16,7 +18,7 @@ class MyColors {
 
 class Grid {
     static DEFAULT_DOT = {
-        size: 10,
+        size: 30,
         color: "black"
     }
 
@@ -46,10 +48,15 @@ class Grid {
     draw_point(point_x, point_y) {
         let grid_point = this.grid[point_x][point_y]
         let canvas_point = this.translate_to_canvas(point_x, point_y)
-        console.log(`DRAWING circle at: [${canvas_point.x}, ${canvas_point.y}] `)
         push()
+        noStroke()
         fill(grid_point.color)
         circle(canvas_point.x, canvas_point.y, grid_point.size)
         pop()
+    }
+
+    set_point_property(point_x, point_y, prop_name, prop_value) {
+        let grid_point = this.grid[point_x][point_y]
+        grid_point[prop_name] = prop_value
     }
 }
