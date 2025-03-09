@@ -1,11 +1,19 @@
 class MyColors {
     constructor(){
-        this.colorPalette = [
-            color('#E0AA24'),
-            color('#E02466'),
-            color('#23E032'),
-            color('#2457E0')
-        ];
+        this.background = color('#FFFFFF')
+        this.colorPalette = [];
+    }
+
+    setCyberpunk(){
+        this.background = color('#000000')
+        this.colorPalette.push(color('#E0AA24'))
+        this.colorPalette.push(color('#E02466'))
+        this.colorPalette.push(color('#23E032'))
+        this.colorPalette.push(color('#2457E0'))
+    }
+
+    getBackground(){
+        return this.background;
     }
 
     randomColor() {
@@ -24,10 +32,17 @@ class BarDimensions {
     }
 
 
-    static long_thin(seed) {
+    static long_thin_homo(seed) {
         return {
             length:seed,
             width:seed/100
+        }
+    }
+
+    static long_thin_hete(seed) {
+        return {
+            length:seed,
+            width:random(seed/20, seed/10)
         }
     }
 
@@ -44,7 +59,7 @@ class Bar {
 
     draw(x, y, rotate_angle=0) {
         push()
-        rectMode(CENTER);
+        //rectMode(CENTER);
         if (!this.fill) {
             noFill();
         } else {
