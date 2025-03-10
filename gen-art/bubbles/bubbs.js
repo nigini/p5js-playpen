@@ -11,7 +11,8 @@ function setup() {
     color("#F4EEA9"),
     color("#F4F482")
   ]
-  createCanvas(600, 600);
+  canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent('my_art');
   background(back_c);
   frame_rate = 2;
 }
@@ -31,18 +32,16 @@ function draw(){
 }
 
 function keyPressed() {
+  console.log('Pressed', key)
+
   if( keyCode === DOWN_ARROW) {
-     frame_rate = (frame_rate <= 1) ? 1 : --frame_rate;
+     frame_rate = (frame_rate <= 0) ? 0 : --frame_rate;
   }
   if( keyCode === UP_ARROW) {
      frame_rate = frame_rate >= 30 ? 30 : ++frame_rate;
   }
 }
 
-function keyTyped() {
-  let level = Number(key);
-  if(level <= 9 && level >= 1) {
-    console.log('key', level)
-    frame_rate = level*2  
-  }
+function keyReleased() {
+  console.log('Released', key)
 }
