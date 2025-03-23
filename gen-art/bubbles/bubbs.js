@@ -2,6 +2,9 @@ let back_c;
 let palette;
 let frame_rate = 2;
 const MAX_CIRCLE_SIZE = 200;
+const MIN_FRAME_SPEED = 0;
+const MAX_FRAME_SPEED = 20;
+
 
 function setup() {
   back_c = color("#F7EDF0");
@@ -14,15 +17,14 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent('my_art');
   background(back_c);
-  frameRate(frame_rate);
+  stroke('black');
+  strokeWeight(0); //CONTROLLED BY TRLS_A
+  frameRate(frame_rate); //CONTROLLED BY TRLS_H
+  activate_trellis();
 }
 
+
 function draw(){
-  if(mouseIsPressed) {
-    stroke('black');
-  } else {
-    noStroke();
-  }
   fill(palette[ round(random(palette.length-1)) ]);
   rand_x = random(width);
   rand_y = random(height);
@@ -30,17 +32,49 @@ function draw(){
   circle(rand_x, rand_y, rand_r);
 }
 
-function keyPressed() {
-  if( keyCode === DOWN_ARROW) {
-    frame_rate = (frame_rate <= 0) ? 0 : --frame_rate;
+function set_frame_rate(value) {
+  if((frame_rate >= MIN_FRAME_SPEED) && (frame_rate <= MAX_FRAME_SPEED) ) {
+    frame_rate = value;
     frameRate(frame_rate);
-  }
-  if( keyCode === UP_ARROW) {
-    frame_rate = frame_rate >= 30 ? 30 : ++frame_rate;
-    frameRate(frame_rate);
+    return true;
+  } else {
+    return false;
   }
 }
 
+
+function keyPressed() {
+  if( keyCode === DOWN_ARROW) {
+    set_frame_rate(frame_rate-1);
+  }
+  if( keyCode === UP_ARROW) {
+    set_frame_rate(frame_rate+1);
+  }
+}
+
+
 function keyTyped() {
   trellis.process_char(key);
+}
+
+
+function activate_trellis() {
+  // ROW A: CONTROL STROKE
+  for(let col=0; col<8; col++){
+    trellis.on_press('a', `${col+1}`, (key, k_evt) => {
+      if(k_evt === 'DOWN') {
+        strokeWeight(col);
+      }
+    });
+  }
+
+
+  // ROW H: CONTROL SPEED
+  for(let col=0; col<8; col++){
+    trellis.on_press('h', `${col+1}`, (key, k_evt) => {
+      if(k_evt === 'DOWN') {
+        set_frame_rate(col*2);
+      }
+    });
+  }
 }

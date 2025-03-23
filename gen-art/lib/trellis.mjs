@@ -16,7 +16,7 @@ let trellis = {
   e: Array(8).fill(false),
   f: Array(8).fill(false),
   g: Array(8).fill(false),
-  f: Array(8).fill(false)
+  h: Array(8).fill(false)
 }
 
 
@@ -25,13 +25,13 @@ let process_char = (character) => {
     is_delete = true;
   } else {
     let key_event = is_delete ? 'UP' : 'DOWN';
-    if( ['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(character) ) {
+    if( ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].includes(character) ) {
       current_row.name = character;
       current_row.content = trellis[character];
-      process_callbacks(character, key_event);
+//      process_callbacks(character, key_event);
     } else {
       if( ['1', '2', '3', '4', '5', '6', '7', '8'].includes(character) ) {
-        process_callbacks(character, key_event);
+//        process_callbacks(character, key_event);
         if(current_row.content){
           let key = `${current_row.name}${character}`;
           current_row.content[parseInt(character)] = !is_delete;
@@ -47,6 +47,12 @@ let process_char = (character) => {
   }
 }
 
+
+/**
+ * @param key a string inside the line+column range of the trellis (eg. "a5",
+ * "e8", etc.)
+ * @param key_event is either "UP" or "DOWN"
+ **/
 let process_callbacks = (key, key_event) => {
   if (key in callbacks) {
     callbacks[key](key, key_event);
@@ -54,8 +60,21 @@ let process_callbacks = (key, key_event) => {
   callbacks.all(key, key_event);
 }
 
+
 let on_press = (row, column, callback) => {
-    
+  if((!row && !column) || (!callback || typeof callback !== 'function')) {
+    console.err(`Incorrect parameters to setup a trellis press event: {ROW: ${row}, COL: ${column}}`);
+    return false;
+  }
+  if(row) {
+    if(column) {
+      callbacks[`${row}${column}`] = callback;
+    }
+    callbacks[`${row}`] = callback;
+  } else {
+      callbacks[`${column}`] = callback;
+  }
+  return true;
 }
 
 export {process_char, on_press};
