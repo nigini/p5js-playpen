@@ -42,7 +42,7 @@ class BarDimensions {
     static long_thin_hete(seed) {
         return {
             length:seed,
-            width:random(seed/20, seed/10)
+            width:random(seed/40, seed/10)
         }
     }
 
