@@ -1,4 +1,4 @@
-# Grids log
+# Bars log
 
 My goal is to generate abstract art based on a lines/bars like in a set of "brush strokes".
 
@@ -20,3 +20,10 @@ Commit [c99873b](https://github.com/nigini/p5js-playpen/commit/c99873b5493267711
 
 ![Colorful and thick horizontal lines drawn in a black background](./timeline/v2-justlines.png)
 
+## STEP THREE:
+
+Play with angles and dimensions... I wanted to see if this can express interesting movement through superposition.
+
+Commit [0eec5e0](https://github.com/nigini/p5js-playpen/commit/0eec5e06b7496383985c8a1f5bb18c84df4c79aa) draws something like this:
+
+![Colorful lines with different thickness and angles drawn in a black background](./timeline/v3-justlines.png)
