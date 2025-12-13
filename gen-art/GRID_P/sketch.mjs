@@ -53,7 +53,11 @@ const sketch = (p5) => {
         for (let row = 1; row <= GRID_SIZE-1; row++) {
             if (Math.random() * 100 < LINE_PROBABILITY) {
                 const line = new GridLine(p5, row, 'horizontal', GRID_SIZE, p5.width);
-                line.setBrush('pen');  // Use brush rendering
+                line.setBrush('pen');
+                // 20% chance of stronger pressure (thicker line)
+                if (Math.random() < 0.2) {
+                    line.setWeight(2);
+                }
                 lines.push(line);
             }
         }
@@ -62,7 +66,11 @@ const sketch = (p5) => {
         for (let col = 1; col <= GRID_SIZE-1; col++) {
             if (Math.random() * 100 < LINE_PROBABILITY) {
                 const line = new GridLine(p5, col, 'vertical', GRID_SIZE, p5.height);
-                line.setBrush('pen');  // Use brush rendering
+                line.setBrush('pen');
+                // 20% chance of stronger pressure (thicker line)
+                if (Math.random() < 0.2) {
+                    line.setWeight(2);
+                }
                 lines.push(line);
             }
         }
