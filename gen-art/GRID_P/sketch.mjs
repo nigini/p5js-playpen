@@ -1,6 +1,7 @@
 // sketch.mjs - ES6 module version using p5.js instance mode
 import chroma from '../lib/colors.mjs';
-import { GridLine } from './materials.mjs';
+import { Palette, PALETTES } from '../lib/colors.mjs';
+import { GridLine, findRectangles } from './materials.mjs';
 
 const sketch = (p5) => {
     // CONFIG
@@ -8,18 +9,31 @@ const sketch = (p5) => {
     const LINE_PROBABILITY = 80; // percentage (0-100)
 
     let lines = [];
+    let rectangles = [];
+    let palette;
 
     p5.setup = () => {
         let art = p5.createCanvas(1080, 1080);
         art.parent('my_art');
 
-        // White background
-        p5.background('#FFFFFF');
+        // Setup palette
+        palette = new Palette();
+        palette.setCustom(PALETTES.pastel.colors, PALETTES.pastel.background);
+
+        // Background
+        p5.background(palette.getBackgroundHex());
 
         // Create grid lines
         createGridLines();
 
-        // Draw all lines
+        // Find closed rectangles
+        rectangles = findRectangles(lines);
+        console.log(`Found ${rectangles.length} closed rectangles`);
+
+        // Draw rectangles first
+        drawRectangles();
+
+        // Draw grid lines on top
         drawGrid();
 
         // Don't loop
@@ -42,6 +56,17 @@ const sketch = (p5) => {
                 lines.push(line);
             }
         }
+    }
+
+    const drawRectangles = () => {
+        p5.noStroke();
+        rectangles.forEach(rect => {
+            // 25% chance to paint this rectangle
+            if (Math.random() < 0.25) {
+                p5.fill(palette.randomColor().hex());
+                p5.rect(rect.x, rect.y, rect.width, rect.height);
+            }
+        });
     }
 
     const drawGrid = () => {

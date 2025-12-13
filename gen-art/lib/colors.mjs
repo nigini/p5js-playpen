@@ -9,6 +9,10 @@ const PALETTES = {
     earthy: {
         background: '#313715',
         colors: ['#313715', '#D16014', '#939F5C', '#BBCE8A', '#E2F9B8']
+    },
+    pastel: {
+        background: '#FFFFFF',
+        colors: ['#FFD6E8', '#FFABC8', '#C9E4DE', '#B5D5E6', '#E8C5E5', '#FAD2B8', '#D4E8D4']
     }
 };
 
