@@ -1,5 +1,4 @@
 // sketch.mjs - ES6 module version using p5.js instance mode
-import chroma from '../lib/colors.mjs';
 import { Palette, PALETTES } from '../lib/colors.mjs';
 import { GridLine, findRectangles } from './materials.mjs';
 
@@ -12,9 +11,18 @@ const sketch = (p5) => {
     let rectangles = [];
     let palette;
 
+    // Initialize brush library with this p5 instance
+    brush.instance(p5);
+
     p5.setup = () => {
-        let art = p5.createCanvas(1080, 1080);
+        let art = p5.createCanvas(1080, 1080, p5.WEBGL);
         art.parent('my_art');
+
+        // Load brush after canvas is created
+        brush.load();
+
+        // WEBGL mode centers at (0,0), translate to top-left corner
+        p5.translate(-p5.width/2, -p5.height/2);
 
         // Setup palette
         palette = new Palette();
@@ -42,17 +50,19 @@ const sketch = (p5) => {
 
     const createGridLines = () => {
         // Create horizontal lines
-        for (let row = 0; row <= GRID_SIZE; row++) {
+        for (let row = 1; row <= GRID_SIZE-1; row++) {
             if (Math.random() * 100 < LINE_PROBABILITY) {
                 const line = new GridLine(p5, row, 'horizontal', GRID_SIZE, p5.width);
+                line.setBrush('pen');  // Use brush rendering
                 lines.push(line);
             }
         }
 
         // Create vertical lines
-        for (let col = 0; col <= GRID_SIZE; col++) {
+        for (let col = 1; col <= GRID_SIZE-1; col++) {
             if (Math.random() * 100 < LINE_PROBABILITY) {
                 const line = new GridLine(p5, col, 'vertical', GRID_SIZE, p5.height);
+                line.setBrush('pen');  // Use brush rendering
                 lines.push(line);
             }
         }

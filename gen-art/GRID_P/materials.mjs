@@ -12,6 +12,7 @@ class GridLine {
         // Line properties
         this.color = '#000000';
         this.weight = 1;
+        this.brushType = null;  // null = regular p5 line, or set to brush type like 'pen', 'rotring', etc.
 
         // Calculate line length and position
         this.calculateLineSegment();
@@ -31,21 +32,34 @@ class GridLine {
     }
 
     draw() {
-        this.p5.push();
-        this.p5.stroke(this.color);
-        this.p5.strokeWeight(this.weight);
+        // Calculate coordinates
+        let x1, y1, x2, y2;
 
         if (this.orientation === 'horizontal') {
-            // Horizontal line at fixed y position
             const y = this.gridIndex * this.cellSize;
-            this.p5.line(this.start, y, this.end, y);
+            x1 = this.start;
+            y1 = y;
+            x2 = this.end;
+            y2 = y;
         } else {
-            // Vertical line at fixed x position
             const x = this.gridIndex * this.cellSize;
-            this.p5.line(x, this.start, x, this.end);
+            x1 = x;
+            y1 = this.start;
+            x2 = x;
+            y2 = this.end;
         }
 
-        this.p5.pop();
+        // Draw with brush or regular p5
+        if (this.brushType) {
+            brush.set(this.brushType, this.color, this.weight);
+            brush.line(x1, y1, x2, y2);
+        } else {
+            this.p5.push();
+            this.p5.stroke(this.color);
+            this.p5.strokeWeight(this.weight);
+            this.p5.line(x1, y1, x2, y2);
+            this.p5.pop();
+        }
     }
 
     setColor(color) {
@@ -55,6 +69,11 @@ class GridLine {
 
     setWeight(weight) {
         this.weight = weight;
+        return this;
+    }
+
+    setBrush(brushType) {
+        this.brushType = brushType;
         return this;
     }
 }
