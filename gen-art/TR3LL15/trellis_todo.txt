@@ -1,0 +1,28 @@
+TRELLIS IMPROVEMENTS — design round 2026-05-17
+===================================================
+
+Architecture decisions:
+- Trellis owns the button grid state internally (8×8 boolean + radio group metadata)
+- Sketch subscribes to events via on_press (observer pattern, no polling)
+- VIZ is source of truth: sketch can write back lighting state via set_cell()
+- Rows are interpreted by the sketch: can be aspect-knobs, layer-selectors, or both
+
+Plan Steps (4):
+----------------
+1. [ ] trellis.set_cell(row, col, state)
+       → sketch-side method to update visual state of a cell/row
+       → Trellis still owns the array; this is a controlled write path
+
+2. [ ] Extend on_press with a mode parameter
+       → 'momentary' (default): fire callback on DOWN only
+       → 'sticky': toggle on each DOWN, fire callback when state flips
+       → 'timed' (future): auto-off after N ms
+
+3. [ ] trellis.configure_row(row, { type: 'radio' })
+       → row-level mutual exclusion
+       → pressing a new column clears siblings, fires callback only for active col
+
+4. [ ] Wire it back into bubbs.js as a demo
+       → row A: radio for strokeWeight
+       → row H: radio for frame rate
+       → maybe add a sticky row for fill type toggles
